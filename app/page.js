@@ -3,33 +3,32 @@ import Image from "next/image";
 import ThemeToggle from "@/components/theme-toggle";
 
 const cards = [
-  { label: "Admin", href: "/admin/dashboard", note: "Manage users, entries, and mock data" },
-  { label: "Executive", href: "/executive/dashboard", note: "Create and manage labour entries" },
-  { label: "Supplier", href: "/supplier/dashboard", note: "Maintain agency profile and availability" },
-  { label: "Demand", href: "/demand/dashboard", note: "Post labour demand requirements" }
+  { label: "Admin", href: "/login?role=admin", note: "Manage users, entries, and mock data" },
+  { label: "Executive", href: "/login?role=executive", note: "Create and manage labour entries" },
+  { label: "Supplier", href: "/login?role=supplier", note: "Maintain agency profile and availability" },
+  { label: "Demand", href: "/login?role=demand", note: "Post labour demand requirements" }
 ];
 
 export default function HomePage() {
   return (
     <div className="home-gradient min-h-screen">
-      <div className="mx-auto max-w-5xl px-4 py-16">
-        <div className="mb-6 flex justify-end">
+      <div className="public-topbar">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Image src="/logo.jpg" alt="Work Bridge logo" width={22} height={22} className="brand-logo-img" />
+            <span>Work Bridge</span>
+          </div>
           <ThemeToggle />
         </div>
+      </div>
+
+      <div className="mx-auto max-w-5xl px-4 py-16">
         <div className="mb-8 text-center">
           <div className="mb-4 flex justify-center">
             <Image src="/logo.jpg" alt="Work Bridge logo" width={64} height={64} className="brand-logo-img" />
           </div>
           <h1 className="text-4xl font-semibold tracking-tight">Work Bridge</h1>
           <p className="mt-3 text-muted">Internal operations now, marketplace ready next.</p>
-          <div className="mt-5 flex justify-center gap-3">
-            <Link className="btn-primary" href="/login">
-              Login
-            </Link>
-            <Link className="btn-secondary" href="/register">
-              Register
-            </Link>
-          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase/client";
 
-export default function GoogleAuthButton({ mode = "login" }) {
+export default function GoogleAuthButton({ mode = "login", role = "" }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,6 +21,32 @@ export default function GoogleAuthButton({ mode = "login" }) {
     if (sessionRes.ok) {
       router.push(`/${sessionData.role}/dashboard`);
       return true;
+    }
+
+    if (sessionRes.status === 404 && mode === "register" && role) {
+      const bootstrapRes = await fetch("/api/users/bootstrap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: token, role, profile: {} })
+      });
+
+      const bootstrapData = await bootstrapRes.json();
+      if (!bootstrapRes.ok) {
+        throw new Error(bootstrapData.error || bootstrapData.errors?.[0] || "Registration failed.");
+      }
+
+      const retrySessionRes = await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: token })
+      });
+      const retrySessionData = await retrySessionRes.json();
+      if (!retrySessionRes.ok) {
+        throw new Error(retrySessionData.error || "Could not start session.");
+      }
+
+      router.push(`/${retrySessionData.role}/dashboard`);
+      return false;
     }
 
     if (sessionRes.status === 404) {

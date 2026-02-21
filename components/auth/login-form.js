@@ -6,7 +6,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import GoogleAuthButton from "@/components/auth/google-auth-button";
 
-export default function LoginForm() {
+function titleCase(value) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export default function LoginForm({ lockedRole = "" }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,9 +47,11 @@ export default function LoginForm() {
     }
   };
 
+  const title = lockedRole ? `${titleCase(lockedRole)} Login Page` : "Login";
+
   return (
     <form className="auth-card space-y-4" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">Login</h1>
+      <h1 className="text-xl font-semibold">{title}</h1>
       <input className="input" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       <div className="relative">
         <input

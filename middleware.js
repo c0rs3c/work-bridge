@@ -14,7 +14,7 @@ export function middleware(request) {
 
   const role = request.cookies.get("lc_role")?.value;
   if (!role) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL(`/login?role=${protectedMap[matchedRoot]}`, request.url));
   }
 
   const requiredRole = protectedMap[matchedRoot];

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { authFetch } from "@/lib/client-auth";
+import { INDIA_STATES_AND_UTS } from "@/lib/india-states";
 
 const empty = {
   agencyName: "",
@@ -63,7 +64,14 @@ export default function SupplierProfileForm() {
       <input className="input" placeholder="Landline number" value={form.landlineNumber} onChange={(e) => setForm((p) => ({ ...p, landlineNumber: e.target.value }))} required />
       <input className="input" placeholder="Team size" value={form.teamSize} onChange={(e) => setForm((p) => ({ ...p, teamSize: e.target.value }))} required />
       <input className="input" placeholder="Skill" value={form.skill} onChange={(e) => setForm((p) => ({ ...p, skill: e.target.value }))} required />
-      <input className="input" placeholder="State" value={form.state} onChange={(e) => setForm((p) => ({ ...p, state: e.target.value }))} required />
+      <select className="input" value={form.state} onChange={(e) => setForm((p) => ({ ...p, state: e.target.value }))} required>
+        <option value="">Select State</option>
+        {INDIA_STATES_AND_UTS.map((state) => (
+          <option key={state} value={state}>
+            {state}
+          </option>
+        ))}
+      </select>
       <textarea className="input md:col-span-2" placeholder="Address" value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} required />
       {error ? <p className="md:col-span-2 text-sm text-danger">{error}</p> : null}
       {success ? <p className="md:col-span-2 text-sm text-success">{success}</p> : null}

@@ -141,3 +141,7 @@ body {
 .auth-card {
   @apply w-full max-w-md rounded-xl border border-border bg-card p-6;
 }
+
+.public-topbar {
+  @apply flex h-14 items-center border-b border-border bg-card;
+}

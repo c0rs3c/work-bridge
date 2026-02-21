@@ -1,5 +1,5 @@
 import SiteShell from "@/components/site-shell";
-import DemandProfileForm from "@/components/demand/profile-form";
+import DemandMarketplace from "@/components/demand/demand-marketplace";
 
 const links = [
   { label: "Dashboard", href: "/demand/dashboard" },
@@ -7,10 +7,10 @@ const links = [
   { label: "Listings", href: "/demand/listings" }
 ];
 
-export default function DemandProfilePage() {
+export default function DemandListingsPage() {
   return (
-    <SiteShell title="Demand Profile" links={links}>
-      <DemandProfileForm />
+    <SiteShell title="Demand Listings And Supplier Search" links={links}>
+      <DemandMarketplace />
     </SiteShell>
   );
 }

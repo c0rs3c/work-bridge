@@ -9,15 +9,27 @@ export async function POST(request) {
     const body = await request.json();
     const { idToken, role, profile = {} } = body;
 
-    if (!idToken || !role || !ROLE_OPTIONS.includes(role) || role === "admin") {
+    if (!idToken || !role || !ROLE_OPTIONS.includes(role)) {
       return NextResponse.json({ error: "Invalid registration request." }, { status: 400 });
     }
 
     const decoded = await verifyIdToken(idToken);
     const db = await getDb();
+    const signInProvider = decoded?.firebase?.sign_in_provider || "";
+    const isGoogleSignIn = signInProvider === "google.com";
+    const mobileNumber = String(profile.mobileNumber || "").trim();
 
     const supplierFields = ["agencyName", "mobileNumber", "landlineNumber", "teamSize", "skill", "address", "state"];
     const hasAnySupplierProfileValue = supplierFields.some((field) => String(profile[field] || "").trim().length > 0);
+
+    if (!isGoogleSignIn) {
+      if (!mobileNumber) {
+        return NextResponse.json({ error: "Mobile number is required for registration." }, { status: 400 });
+      }
+      if (!/^[0-9]{10}$/.test(mobileNumber)) {
+        return NextResponse.json({ error: "Mobile number must be 10 digits." }, { status: 400 });
+      }
+    }
 
     if (role === "supplier" && hasAnySupplierProfileValue) {
       const validation = validateSupplierProfile(profile);
@@ -34,6 +46,7 @@ export async function POST(request) {
         $set: {
           firebaseUid: decoded.uid,
           email: decoded.email,
+          mobileNumber: mobileNumber || "",
           role,
           status: "active",
           updatedAt: now

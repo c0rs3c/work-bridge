@@ -1,16 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import GoogleAuthButton from "@/components/auth/google-auth-button";
+import { INDIA_STATES_AND_UTS } from "@/lib/india-states";
 
-const roles = ["executive", "supplier", "demand"];
+const roles = ["admin", "executive", "supplier", "demand"];
 
-export default function RegisterForm() {
+function titleCase(value) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export default function RegisterForm({ lockedRole = "" }) {
   const router = useRouter();
-  const [role, setRole] = useState("supplier");
+  const safeLockedRole = roles.includes(String(lockedRole || "").toLowerCase()) ? String(lockedRole).toLowerCase() : "";
+  const [role, setRole] = useState(safeLockedRole || "supplier");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,10 +40,11 @@ export default function RegisterForm() {
   });
 
   const fields = useMemo(() => {
+    if (role === "admin") return [];
+
     if (role === "supplier") {
       return [
         ["agencyName", "Name of the agency"],
-        ["mobileNumber", "Mobile number"],
         ["landlineNumber", "Landline number"],
         ["teamSize", "Team size"],
         ["skill", "Skill"],
@@ -59,6 +67,10 @@ export default function RegisterForm() {
       ["defaultLocation", "Default location"]
     ];
   }, [role]);
+
+  useEffect(() => {
+    if (safeLockedRole) setRole(safeLockedRole);
+  }, [safeLockedRole]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -95,21 +107,24 @@ export default function RegisterForm() {
     }
   };
 
+  const title = safeLockedRole ? `${titleCase(safeLockedRole)} Registration Page` : "Register";
+
   return (
-    <form className="w-full max-w-xl rounded-xl border border-border bg-card p-6" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">Register</h1>
-      <select className="input mt-4" value={role} onChange={(e) => setRole(e.target.value)}>
-        {roles.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </select>
-      <input className="input mt-3" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <form className="mx-auto w-full max-w-xl rounded-xl border border-border bg-card p-6" onSubmit={onSubmit}>
+      <h1 className="text-xl font-semibold">{title}</h1>
+      <p className="mt-2 text-xs text-muted">Fields marked with * are mandatory.</p>
+      <input className="input mt-4" placeholder="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <input
+        className="input mt-3"
+        placeholder="Mobile number *"
+        value={profile.mobileNumber}
+        onChange={(e) => setProfile((prev) => ({ ...prev, mobileNumber: e.target.value }))}
+        required
+      />
       <div className="relative mt-3">
         <input
           className="input pr-10"
-          placeholder="Password"
+          placeholder="Password *"
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -138,23 +153,58 @@ export default function RegisterForm() {
       </div>
 
       <div className="mt-3 grid gap-3 md:grid-cols-2">
-        {fields.map(([key, label]) => (
-          <input
-            key={key}
-            className="input"
-            placeholder={label}
-            value={profile[key]}
-            onChange={(e) => setProfile((prev) => ({ ...prev, [key]: e.target.value }))}
-            required={false}
-          />
-        ))}
+        {fields.map(([key, label]) => {
+          if (key === "address") {
+            return (
+              <textarea
+                key={key}
+                className="input md:col-span-2"
+                placeholder={label}
+                value={profile[key]}
+                onChange={(e) => setProfile((prev) => ({ ...prev, [key]: e.target.value }))}
+                required={false}
+                rows={3}
+              />
+            );
+          }
+
+          if (key === "state") {
+            return (
+              <select
+                key={key}
+                className="input"
+                value={profile[key]}
+                onChange={(e) => setProfile((prev) => ({ ...prev, [key]: e.target.value }))}
+                required={false}
+              >
+                <option value="">Select State</option>
+                {INDIA_STATES_AND_UTS.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+            );
+          }
+
+          return (
+            <input
+              key={key}
+              className="input"
+              placeholder={label}
+              value={profile[key]}
+              onChange={(e) => setProfile((prev) => ({ ...prev, [key]: e.target.value }))}
+              required={false}
+            />
+          );
+        })}
       </div>
 
       {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
       <button className="btn-primary mt-3 w-full" type="submit" disabled={loading}>
         {loading ? "Creating account..." : "Register"}
       </button>
-      <GoogleAuthButton mode="register" />
+      <GoogleAuthButton mode="register" role={role} />
     </form>
   );
 }
