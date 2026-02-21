@@ -114,13 +114,6 @@ export default function RegisterForm({ lockedRole = "" }) {
       <h1 className="text-xl font-semibold">{title}</h1>
       <p className="mt-2 text-xs text-muted">Fields marked with * are mandatory.</p>
       <input className="input mt-4" placeholder="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input
-        className="input mt-3"
-        placeholder="Mobile number *"
-        value={profile.mobileNumber}
-        onChange={(e) => setProfile((prev) => ({ ...prev, mobileNumber: e.target.value }))}
-        required
-      />
       <div className="relative mt-3">
         <input
           className="input pr-10"
@@ -151,6 +144,13 @@ export default function RegisterForm({ lockedRole = "" }) {
           )}
         </button>
       </div>
+      <input
+        className="input mt-3"
+        placeholder="Mobile number *"
+        value={profile.mobileNumber}
+        onChange={(e) => setProfile((prev) => ({ ...prev, mobileNumber: e.target.value }))}
+        required
+      />
 
       <div className="mt-3 grid gap-3 md:grid-cols-2">
         {fields.map(([key, label]) => {
