@@ -1,0 +1,30 @@
+{
+  "name": "work-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "mock:generate": "node scripts/generate-mock-data.js",
+    "mock:seed:db": "node scripts/seed-mock-data.js",
+    "mock:seed:firebase": "node scripts/create-firebase-mock-users.js",
+    "mock:delete:db": "node scripts/delete-mock-data.js",
+    "mock:delete:firebase": "node scripts/delete-firebase-mock-users.js",
+    "mock:delete:all": "npm run mock:delete:db && npm run mock:delete:firebase"
+  },
+  "dependencies": {
+    "firebase": "^12.0.0",
+    "firebase-admin": "^13.0.0",
+    "mongodb": "^6.10.0",
+    "next": "15.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16"
+  }
+}

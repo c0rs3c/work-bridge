@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --text: #1f2329;
+  --muted: #6c7480;
+  --brand: #2a63d7;
+  --danger: #d63b4a;
+  --success: #20884d;
+  --border: #d6d8dd;
+}
+
+.dark {
+  --bg: #0e1626;
+  --card: #111b2d;
+  --text: #e6edf8;
+  --muted: #8b97ab;
+  --brand: #5f86e7;
+  --danger: #ff7b88;
+  --success: #79d3a0;
+  --border: #2d3850;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Roboto", "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.input {
+  @apply w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text outline-none focus:ring-2 focus:ring-brand;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition;
+}
+
+.btn-primary {
+  @apply btn bg-brand text-white hover:opacity-90;
+}
+
+.btn-secondary {
+  @apply btn border border-border bg-card text-text hover:bg-slate-100 dark:hover:bg-slate-800;
+}
+
+.card {
+  @apply rounded-xl border border-border bg-card p-5;
+}
+
+.card-active {
+  @apply border-brand ring-1 ring-brand;
+}
+
+.os-banner {
+  @apply flex h-12 items-center justify-center gap-2 border-b border-border bg-slate-100 text-sm text-text dark:bg-slate-900;
+}
+
+.os-layout {
+  @apply grid min-h-[calc(100vh-48px)] md:grid-cols-[280px_1fr];
+}
+
+.os-sidebar {
+  @apply border-r border-border bg-card;
+}
+
+.os-brand {
+  @apply flex h-[74px] items-center border-b border-border px-5 text-lg font-semibold tracking-tight;
+}
+
+.brand-logo-img {
+  @apply rounded-md object-cover;
+}
+
+.os-nav {
+  @apply space-y-1 p-3;
+}
+
+.os-nav-link {
+  @apply block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-slate-100 dark:hover:bg-slate-800;
+}
+
+.os-workspace {
+  @apply bg-card;
+}
+
+.os-workspace-header {
+  @apply flex h-[74px] items-center justify-between gap-4 border-b border-border px-5;
+}
+
+.os-content {
+  @apply p-5;
+}
+
+.theme-icon-btn {
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-text;
+}
+
+.user-chip {
+  @apply rounded-lg border border-border bg-card px-3 py-1;
+}
+
+.user-chip-name {
+  @apply text-sm font-semibold leading-tight;
+}
+
+.user-chip-email {
+  @apply text-xs text-muted leading-tight;
+}
+
+.status-badge {
+  @apply inline-flex rounded-full px-2 py-1 text-xs font-semibold;
+}
+
+.status-active {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.status-inactive {
+  @apply bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200;
+}
+
+.home-gradient {
+  background:
+    radial-gradient(1200px 450px at 10% -10%, rgba(42, 99, 215, 0.12), transparent 60%),
+    radial-gradient(900px 360px at 90% 0%, rgba(95, 134, 231, 0.1), transparent 60%),
+    var(--bg);
+}
+
+.auth-shell {
+  @apply grid min-h-screen place-items-center bg-[#f5f7fb] px-5 dark:bg-[#0e1626];
+}
+
+.auth-card {
+  @apply w-full max-w-md rounded-xl border border-border bg-card p-6;
+}
